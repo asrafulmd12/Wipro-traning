@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="11.131" tests="1" skipped="0" failures="0" errors="0">
+<testcase classname="Tutorials Ninja Automation" name="Complete purchase flow - Example #1.1" time="10.93">
+<system-out><![CDATA[
+Given user launches Tutorials Ninja website.................................passed
+And user logs in with asraful123@gmail.com Test@123.........................passed
+And user searches for product iMac..........................................passed
+And user adds product to cart...............................................passed
+And user removes product from cart..........................................passed
+And user adds product again iMac............................................passed
+And user proceeds to checkout...............................................passed
+And order should be confirmed...............................................passed
+Then user logs out from application.........................................passed
+]]></system-out>
+</testcase>
+</testsuite>

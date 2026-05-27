@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="66.456" tests="8" skipped="0" failures="0" errors="0">
+<testcase classname="verify Login functionality" name="verify user is able to login with valid credentials" time="7.057">
+<system-out><![CDATA[
+Given login page should be open in default browser..........................passed
+When click on username field and add valid user username....................passed
+And then click on password button and enter valid password..................passed
+And now click on submit button..............................................passed
+Then login successfully and redirect to home page...........................passed
+]]></system-out>
+</testcase>
+<testcase classname="verify Login user function" name="verify login page first - Example #1.1" time="4.709">
+<system-out><![CDATA[
+Given login page should be open in default tab..............................passed
+When click on username field and type valid user username username..........passed
+And then click on password button and type valid password password..........passed
+And now click on submit buttons success.....................................passed
+Then login successfully and redirects to home page..........................passed
+]]></system-out>
+</testcase>
+<testcase classname="verify Login user function" name="verify login page first - Example #1.2" time="6.415">
+<system-out><![CDATA[
+Given login page should be open in default tab..............................passed
+When click on username field and type valid user username skdkjkd...........passed
+And then click on password button and type valid password password..........passed
+And now click on submit buttons fail........................................passed
+Then login successfully and redirects to home page..........................passed
+]]></system-out>
+</testcase>
+<testcase classname="verify Login user function" name="verify login page first - Example #1.3" time="6.899">
+<system-out><![CDATA[
+Given login page should be open in default tab..............................passed
+When click on username field and type valid user username username..........passed
+And then click on password button and type valid password skckkldkc.........passed
+And now click on submit buttons fail........................................passed
+Then login successfully and redirects to home page..........................passed
+]]></system-out>
+</testcase>
+<testcase classname="verify Login user function" name="verify login page first - Example #1.4" time="6.95">
+<system-out><![CDATA[
+Given login page should be open in default tab..............................passed
+When click on username field and type valid user username skjcjakfofk.......passed
+And then click on password button and type valid password cbjacjc...........passed
+And now click on submit buttons fail........................................passed
+Then login successfully and redirects to home page..........................passed
+]]></system-out>
+</testcase>
+<testcase classname="Verify Registration functionality" name="verify user is able to register" time="3.945">
+<system-out><![CDATA[
+Given registration page should be open in default browser...................passed
+When click on firstname field and add first name............................passed
+And then click on last name field and add last name.........................passed
+And then click on email field and add email id..............................passed
+And then click on telephone field and add telephone number..................passed
+And then click on password field and type a passowrd........................passed
+And then click on password confirm field and retype passowrd................passed
+And then click on agree checkbox field and click on the checkbox............passed
+And now click on continue button............................................passed
+Then registration will be successful........................................passed
+]]></system-out>
+</testcase>
+<testcase classname="Verify Registration functionality" name="verify user is able to register" time="6.666">
+<system-out><![CDATA[
+Given registration page should be open in default browser...................passed
+When click on firstname field and add first name............................passed
+And then click on last name field and add last name.........................passed
+And then click on email field and add email id..............................passed
+And then click on telephone field and add telephone number..................passed
+And then click on password field and type a passowrd........................passed
+And then click on password confirm field and retype passowrd................passed
+And then click on agree checkbox field and click on the checkbox............passed
+And now click on continue button............................................passed
+And go to search tab add inputs and click on search button..................passed
+Then search funtionality will be successful and related products will be displayed.passed
+]]></system-out>
+</testcase>
+<testcase classname="Tutorials Ninja Automation" name="Complete purchase flow - Example #1.1" time="23.458">
+<system-out><![CDATA[
+Given user launches Tutorials Ninja website.................................passed
+When user registers a new account...........................................passed
+And user logs out...........................................................passed
+And user logs in............................................................passed
+And user searches for product iMac..........................................passed
+And user adds product to cart...............................................passed
+And user removes product from cart..........................................passed
+And user adds product again iMac............................................passed
+And user proceeds to checkout...............................................passed
+And order should be confirmed...............................................passed
+Then user logs out from application.........................................passed
+]]></system-out>
+</testcase>
+</testsuite>
