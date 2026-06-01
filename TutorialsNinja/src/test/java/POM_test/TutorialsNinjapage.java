@@ -179,67 +179,32 @@ public class TutorialsNinjapage {
 
             WebElement cartElement =
                     wait.until(
-                            ExpectedConditions.elementToBeClickable(
-                                    cart));
+                            ExpectedConditions.elementToBeClickable(cart));
 
             ((JavascriptExecutor) driver)
-                    .executeScript(
-                            "arguments[0].click();",
-                            cartElement);
+                    .executeScript("arguments[0].click();", cartElement);
+
+            Thread.sleep(2000);
 
             WebElement removeBtn =
                     wait.until(
-                            ExpectedConditions.elementToBeClickable(
+                            ExpectedConditions.visibilityOfElementLocated(
                                     removeProduct));
 
-            removeBtn.click();
+            ((JavascriptExecutor) driver)
+                    .executeScript("arguments[0].click();", removeBtn);
 
-            // Wait until cart updates after removal
-            Thread.sleep(2000);
-
-            System.out.println(
-                    "Cart Value : " +
-                    driver.findElement(cart).getText());
+            wait.until(
+                    ExpectedConditions.invisibilityOf(removeBtn));
 
             System.out.println("Product removed");
-
-        } catch (StaleElementReferenceException e) {
-
-            try {
-
-                WebElement cartElement =
-                        wait.until(
-                                ExpectedConditions.elementToBeClickable(
-                                        cart));
-
-                ((JavascriptExecutor) driver)
-                        .executeScript(
-                                "arguments[0].click();",
-                                cartElement);
-
-                WebElement removeBtn =
-                        wait.until(
-                                ExpectedConditions.elementToBeClickable(
-                                        removeProduct));
-
-                removeBtn.click();
-
-                Thread.sleep(2000);
-
-                System.out.println(
-                        "Cart Value : " +
-                        driver.findElement(cart).getText());
-
-                System.out.println("Product removed after retry");
-
-            } catch (Exception ex) {
-
-                ex.printStackTrace();
-            }
 
         } catch (Exception e) {
 
             e.printStackTrace();
+
+            throw new RuntimeException(
+                    "Unable to remove product");
         }
     }
 
@@ -256,10 +221,7 @@ public class TutorialsNinjapage {
 
         try {
 
-            wait.until(
-                    ExpectedConditions.visibilityOfElementLocated(
-                            cart));
-
+            // Click cart
             WebElement cartElement =
                     wait.until(
                             ExpectedConditions.elementToBeClickable(
@@ -270,21 +232,43 @@ public class TutorialsNinjapage {
                             "arguments[0].click();",
                             cartElement);
 
+            // Wait for dropdown to appear
+            wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(
+                            viewCart));
+
+            // Re-locate View Cart before clicking
             WebElement viewCartBtn =
-                    wait.until(
-                            ExpectedConditions.elementToBeClickable(
-                                    viewCart));
+                    driver.findElement(viewCart);
 
-            viewCartBtn.click();
+            ((JavascriptExecutor) driver)
+                    .executeScript(
+                            "arguments[0].click();",
+                            viewCartBtn);
 
+            // Wait for cart page
+            wait.until(
+                    ExpectedConditions.urlContains(
+                            "checkout/cart"));
+
+            // Re-locate Checkout button
             WebElement checkoutBtn =
                     wait.until(
                             ExpectedConditions.elementToBeClickable(
                                     checkout));
 
-            checkoutBtn.click();
+            ((JavascriptExecutor) driver)
+                    .executeScript(
+                            "arguments[0].click();",
+                            checkoutBtn);
 
-            System.out.println("Checkout clicked");
+            // Wait for checkout page
+            wait.until(
+                    ExpectedConditions.urlContains(
+                            "checkout"));
+
+            System.out.println(
+                    "Checkout completed");
 
         } catch (Exception e) {
 
