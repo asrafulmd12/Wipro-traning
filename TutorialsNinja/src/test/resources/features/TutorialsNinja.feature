@@ -1,5 +1,5 @@
 Feature: Tutorials Ninja Automation
-# @Smoke
+@Smoke
 Scenario Outline: Complete purchase flow
 
 Given user launches Tutorials Ninja website
