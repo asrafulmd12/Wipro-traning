@@ -6,7 +6,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -38,28 +37,18 @@ public class TutorialsNinjapage {
 
     // Search locators
     By searchBox = By.name("search");
-
-    By searchButton =
-            By.xpath("//button[@class='btn btn-default btn-lg']");
+    By searchButton = By.xpath("//button[@class='btn btn-default btn-lg']");
 
     // Cart locators
-    By addToCart =
-            By.xpath("//span[text()='Add to Cart']");
-
+    By addToCart = By.xpath("(//button[contains(@onclick,'cart.add')])[1]");
     By cart = By.id("cart-total");
-
-    By removeProduct =
-            By.cssSelector(".btn-danger");
+    By removeProduct = By.cssSelector(".btn-danger");
 
     // Checkout locators
-    By viewCart =
-            By.xpath("//strong[normalize-space()='View Cart']");
+    By viewCart = By.xpath("//strong[normalize-space()='View Cart']");
+    By checkout = By.linkText("Checkout");
 
-    By checkout =
-            By.linkText("Checkout");
-
-    public TutorialsNinjapage(WebDriver driver)
-    {
+    public TutorialsNinjapage(WebDriver driver) {
         this.driver = driver;
 
         wait = new WebDriverWait(
@@ -67,8 +56,8 @@ public class TutorialsNinjapage {
                 Duration.ofSeconds(30));
     }
 
-    public WebElement element(By locator)
-    {
+    public WebElement element(By locator) {
+
         wait.until(
                 ExpectedConditions.presenceOfElementLocated(locator));
 
@@ -83,8 +72,7 @@ public class TutorialsNinjapage {
                              String lname,
                              String mail,
                              String mobile,
-                             String pass)
-    {
+                             String pass) {
 
         element(myAccount).click();
 
@@ -107,16 +95,15 @@ public class TutorialsNinjapage {
         element(continueButton).click();
     }
 
-    public void logout()
-    {
+    public void logout() {
+
         element(myAccount).click();
 
         element(logout).click();
     }
 
     public void login(String mail,
-                      String pass)
-    {
+                      String pass) {
 
         WebElement account =
                 wait.until(
@@ -137,40 +124,73 @@ public class TutorialsNinjapage {
         element(loginButton).click();
     }
 
-    public void searchProduct(String product)
-    {
+    public void searchProduct(String product) {
 
         wait.until(
-                ExpectedConditions
-                        .visibilityOfElementLocated(searchBox));
+                ExpectedConditions.visibilityOfElementLocated(
+                        searchBox));
 
-        element(searchBox)
-                .sendKeys(product);
+        element(searchBox).clear();
 
-        element(searchButton)
-                .click();
+        element(searchBox).sendKeys(product);
+
+        element(searchButton).click();
+
+        System.out.println(
+                "Current URL : " + driver.getCurrentUrl());
+
+        System.out.println(
+                "Page Title : " + driver.getTitle());
+
+        System.out.println(
+                "Searching Product : " + product);
     }
 
-    public void addProduct()
-    {
+    public void addProduct() {
 
-        element(addToCart)
-                .click();
+        try {
+
+            WebElement addCartBtn =
+                    wait.until(
+                            ExpectedConditions.visibilityOfElementLocated(
+                                    addToCart));
+
+            ((JavascriptExecutor) driver)
+                    .executeScript(
+                            "arguments[0].scrollIntoView({block:'center'});",
+                            addCartBtn);
+
+            Thread.sleep(2000);
+
+            ((JavascriptExecutor) driver)
+                    .executeScript(
+                            "arguments[0].click();",
+                            addCartBtn);
+
+            System.out.println("Product added to cart");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            throw new RuntimeException(
+                    "Unable to click Add To Cart");
+        }
     }
 
-    public void removeProduct()
-    {
+    public void removeProduct() {
+
         WebDriverWait wait =
                 new WebDriverWait(
                         driver,
                         Duration.ofSeconds(15));
 
-        try
-        {
+        try {
+
             WebElement cartElement =
                     wait.until(
-                            ExpectedConditions
-                                    .elementToBeClickable(cart));
+                            ExpectedConditions.elementToBeClickable(
+                                    cart));
 
             ((JavascriptExecutor) driver)
                     .executeScript(
@@ -186,36 +206,33 @@ public class TutorialsNinjapage {
 
             WebElement removeBtn =
                     wait.until(
-                            ExpectedConditions
-                                    .elementToBeClickable(
-                                            removeProduct));
+                            ExpectedConditions.elementToBeClickable(
+                                    removeProduct));
 
             removeBtn.click();
-        }
 
-        catch (Exception e)
-        {
+        } catch (Exception e) {
+
             e.printStackTrace();
         }
     }
 
-    public void addAgain(String product)
-    {
+    public void addAgain(String product) {
 
         searchProduct(product);
 
         addProduct();
     }
 
-    public void checkout()
-    {
+    public void checkout() {
+
         WebDriverWait wait =
                 new WebDriverWait(
                         driver,
                         Duration.ofSeconds(15));
 
-        try
-        {
+        try {
+
             wait.until(
                     ExpectedConditions.textToBePresentInElementLocated(
                             cart,
@@ -223,8 +240,8 @@ public class TutorialsNinjapage {
 
             WebElement cartElement =
                     wait.until(
-                            ExpectedConditions
-                                    .presenceOfElementLocated(cart));
+                            ExpectedConditions.presenceOfElementLocated(
+                                    cart));
 
             ((JavascriptExecutor) driver)
                     .executeScript(
@@ -232,8 +249,8 @@ public class TutorialsNinjapage {
                             cartElement);
 
             wait.until(
-                    ExpectedConditions
-                            .elementToBeClickable(cart));
+                    ExpectedConditions.elementToBeClickable(
+                            cart));
 
             ((JavascriptExecutor) driver)
                     .executeScript(
@@ -242,21 +259,20 @@ public class TutorialsNinjapage {
 
             WebElement viewCartBtn =
                     wait.until(
-                            ExpectedConditions
-                                    .elementToBeClickable(viewCart));
+                            ExpectedConditions.elementToBeClickable(
+                                    viewCart));
 
             viewCartBtn.click();
 
             WebElement checkoutBtn =
                     wait.until(
-                            ExpectedConditions
-                                    .elementToBeClickable(checkout));
+                            ExpectedConditions.elementToBeClickable(
+                                    checkout));
 
             checkoutBtn.click();
-        }
 
-        catch (Exception e)
-        {
+        } catch (Exception e) {
+
             e.printStackTrace();
         }
     }
