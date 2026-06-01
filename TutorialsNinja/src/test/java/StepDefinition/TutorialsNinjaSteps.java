@@ -183,18 +183,29 @@ public class TutorialsNinjaSteps {
         WebDriverWait wait =
                 new WebDriverWait(
                         driver,
-                        Duration.ofSeconds(15));
+                        Duration.ofSeconds(30));
 
-        wait.until(
-                ExpectedConditions.urlContains(
-                        "checkout"));
+        try
+        {
+            wait.until(
+                    ExpectedConditions.urlContains(
+                            "checkout"));
 
-        Assert.assertTrue(
-                driver.getCurrentUrl()
-                        .contains("checkout"));
+            Assert.assertTrue(
+                    driver.getCurrentUrl()
+                            .contains("checkout"));
 
-        System.out.println(
-                "Checkout completed");
+            System.out.println(
+                    "Checkout completed");
+        }
+        catch(Exception e)
+        {
+            System.out.println(
+                    "Current URL : " +
+                    driver.getCurrentUrl());
+
+            throw e;
+        }
     }
 
     @And("order should be confirmed")

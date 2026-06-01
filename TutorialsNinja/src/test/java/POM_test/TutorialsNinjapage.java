@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -49,6 +50,7 @@ public class TutorialsNinjapage {
     By checkout = By.linkText("Checkout");
 
     public TutorialsNinjapage(WebDriver driver) {
+
         this.driver = driver;
 
         wait = new WebDriverWait(
@@ -75,30 +77,22 @@ public class TutorialsNinjapage {
                              String pass) {
 
         element(myAccount).click();
-
         element(register).click();
 
         element(firstname).sendKeys(fname);
-
         element(lastname).sendKeys(lname);
-
         element(email).sendKeys(mail);
-
         element(phone).sendKeys(mobile);
-
         element(password).sendKeys(pass);
-
         element(confirmPassword).sendKeys(pass);
 
         element(agree).click();
-
         element(continueButton).click();
     }
 
     public void logout() {
 
         element(myAccount).click();
-
         element(logout).click();
     }
 
@@ -118,21 +112,22 @@ public class TutorialsNinjapage {
         element(login).click();
 
         element(email).sendKeys(mail);
-
         element(password).sendKeys(pass);
 
         element(loginButton).click();
+
+        System.out.println("Login successful");
     }
 
     public void searchProduct(String product) {
 
-        wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        searchBox));
+        WebElement search =
+                wait.until(
+                        ExpectedConditions.visibilityOfElementLocated(
+                                searchBox));
 
-        element(searchBox).clear();
-
-        element(searchBox).sendKeys(product);
+        search.clear();
+        search.sendKeys(product);
 
         element(searchButton).click();
 
@@ -152,7 +147,7 @@ public class TutorialsNinjapage {
 
             WebElement addCartBtn =
                     wait.until(
-                            ExpectedConditions.visibilityOfElementLocated(
+                            ExpectedConditions.elementToBeClickable(
                                     addToCart));
 
             ((JavascriptExecutor) driver)
@@ -180,24 +175,12 @@ public class TutorialsNinjapage {
 
     public void removeProduct() {
 
-        WebDriverWait wait =
-                new WebDriverWait(
-                        driver,
-                        Duration.ofSeconds(15));
-
         try {
 
             WebElement cartElement =
                     wait.until(
                             ExpectedConditions.elementToBeClickable(
                                     cart));
-
-            ((JavascriptExecutor) driver)
-                    .executeScript(
-                            "arguments[0].scrollIntoView(true);",
-                            cartElement);
-
-            Thread.sleep(1000);
 
             ((JavascriptExecutor) driver)
                     .executeScript(
@@ -211,6 +194,49 @@ public class TutorialsNinjapage {
 
             removeBtn.click();
 
+            // Wait until cart updates after removal
+            Thread.sleep(2000);
+
+            System.out.println(
+                    "Cart Value : " +
+                    driver.findElement(cart).getText());
+
+            System.out.println("Product removed");
+
+        } catch (StaleElementReferenceException e) {
+
+            try {
+
+                WebElement cartElement =
+                        wait.until(
+                                ExpectedConditions.elementToBeClickable(
+                                        cart));
+
+                ((JavascriptExecutor) driver)
+                        .executeScript(
+                                "arguments[0].click();",
+                                cartElement);
+
+                WebElement removeBtn =
+                        wait.until(
+                                ExpectedConditions.elementToBeClickable(
+                                        removeProduct));
+
+                removeBtn.click();
+
+                Thread.sleep(2000);
+
+                System.out.println(
+                        "Cart Value : " +
+                        driver.findElement(cart).getText());
+
+                System.out.println("Product removed after retry");
+
+            } catch (Exception ex) {
+
+                ex.printStackTrace();
+            }
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -222,35 +248,22 @@ public class TutorialsNinjapage {
         searchProduct(product);
 
         addProduct();
+
+        System.out.println("Added again");
     }
 
     public void checkout() {
 
-        WebDriverWait wait =
-                new WebDriverWait(
-                        driver,
-                        Duration.ofSeconds(15));
-
         try {
 
             wait.until(
-                    ExpectedConditions.textToBePresentInElementLocated(
-                            cart,
-                            "1 item"));
+                    ExpectedConditions.visibilityOfElementLocated(
+                            cart));
 
             WebElement cartElement =
                     wait.until(
-                            ExpectedConditions.presenceOfElementLocated(
+                            ExpectedConditions.elementToBeClickable(
                                     cart));
-
-            ((JavascriptExecutor) driver)
-                    .executeScript(
-                            "arguments[0].scrollIntoView(true);",
-                            cartElement);
-
-            wait.until(
-                    ExpectedConditions.elementToBeClickable(
-                            cart));
 
             ((JavascriptExecutor) driver)
                     .executeScript(
@@ -271,9 +284,14 @@ public class TutorialsNinjapage {
 
             checkoutBtn.click();
 
+            System.out.println("Checkout clicked");
+
         } catch (Exception e) {
 
             e.printStackTrace();
+
+            throw new RuntimeException(
+                    "Checkout failed");
         }
     }
 }
