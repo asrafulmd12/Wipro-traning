@@ -63,15 +63,29 @@ stage('Docker Run') {
         }
     }
 }
- 
- 
-    post {
-        success {
-            echo 'Build Successful'
+        stage('Build Docker Image') {
+    steps {
+        dir('TutorialsNinja') {
+            bat 'docker build -t tutorials-ninja .'
         }
- 
-        failure {
-            echo 'Build Failed'
-        }
+    }
+}
+   post {
+
+    always {
+
+        junit allowEmptyResults: true,
+              testResults: 'TutorialsNinja/target/junitreport/*.xml'
+
+        archiveArtifacts artifacts: 'TutorialsNinja/target/**/*.*',
+                         fingerprint: true
+    }
+
+    success {
+        echo 'Build Successful'
+    }
+
+    failure {
+        echo 'Build Failed'
     }
 }
