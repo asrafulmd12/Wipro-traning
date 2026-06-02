@@ -1,21 +1,20 @@
 pipeline {
     agent any
- 
+
     tools {
         maven 'Maven3'
         jdk 'jdk21'
-        
     }
- 
+
     stages {
- 
+
         stage('Checkout') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/asrafulmd12/Wipro-traning.git'
             }
         }
- 
+
         stage('Build') {
             steps {
                 dir('TutorialsNinja') {
@@ -23,7 +22,7 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Compile') {
             steps {
                 dir('TutorialsNinja') {
@@ -31,7 +30,7 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Test') {
             steps {
                 dir('TutorialsNinja') {
@@ -39,7 +38,7 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Package') {
             steps {
                 dir('TutorialsNinja') {
@@ -47,45 +46,41 @@ pipeline {
                 }
             }
         }
-    }
-           stage('Docker Build') {
-    steps {
-		dir('TutorialsNinja'){
-        bat 'docker build -t tutorials-ninja .'
+
+        stage('Docker Build') {
+            steps {
+                dir('TutorialsNinja') {
+                    bat 'docker build -t tutorials-ninja .'
+                }
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                dir('TutorialsNinja') {
+                    bat 'docker run --rm tutorials-ninja'
+                }
+            }
         }
     }
-}
- 
-stage('Docker Run') {
-    steps {
-		dir('TutorialsNinja'){
-        bat 'docker run --rm tutorials-ninja'
+
+    post {
+
+        always {
+
+            junit allowEmptyResults: true,
+                  testResults: 'TutorialsNinja/target/junitreport/*.xml'
+
+            archiveArtifacts artifacts: 'TutorialsNinja/target/**/*.*',
+                             fingerprint: true
         }
-    }
-}
-        stage('Build Docker Image') {
-    steps {
-        dir('TutorialsNinja') {
-            bat 'docker build -t tutorials-ninja .'
+
+        success {
+            echo 'Build Successful'
         }
-    }
-}
-   post {
 
-    always {
-
-        junit allowEmptyResults: true,
-              testResults: 'TutorialsNinja/target/junitreport/*.xml'
-
-        archiveArtifacts artifacts: 'TutorialsNinja/target/**/*.*',
-                         fingerprint: true
-    }
-
-    success {
-        echo 'Build Successful'
-    }
-
-    failure {
-        echo 'Build Failed'
+        failure {
+            echo 'Build Failed'
+        }
     }
 }
