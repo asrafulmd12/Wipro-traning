@@ -48,6 +48,22 @@ pipeline {
             }
         }
     }
+           stage('Docker Build') {
+    steps {
+		dir('TutorialsNinja'){
+        bat 'docker build -t tutorials-ninja .'
+        }
+    }
+}
+ 
+stage('Docker Run') {
+    steps {
+		dir('TutorialsNinja'){
+        bat 'docker run --rm tutorials-ninja'
+        }
+    }
+}
+ 
  
     post {
         success {

@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -15,8 +16,13 @@ public class Hooks {
     @Before
     public void setup()
     {
-        driver = new ChromeDriver();
+    	ChromeOptions options = new ChromeOptions();
 
+    	options.addArguments("--headless=new");
+    	options.addArguments("--no-sandbox");
+    	options.addArguments("--disable-dev-shm-usage");
+
+    	driver = new ChromeDriver(options);
         driver.manage()
               .window()
               .maximize();
