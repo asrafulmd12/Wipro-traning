@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3'
+        jdk 'jdk21'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/asrafulmd12/Wipro-traning.git'
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                dir('Testing') {
+                    bat 'mvn clean'
+                }
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                dir('Testing') {
+                    bat 'mvn compile'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('Testing') {
+                    bat 'mvn test'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                dir('Testing') {
+                    bat 'mvn package'
+                }
+            }
+        }
+    }
+
+    post {
+
+        always {
+            echo 'Pipeline execution completed'
+        }
+
+        success {
+            echo 'Build Successful'
+        }
+
+        failure {
+            echo 'Build Failed'
+        }
+    }
+}
