@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven3'
+        jdk 'jdk21'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/asrafulmd12/Wipro-traning.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('TutorialsNinja') {
+                    bat 'mvn clean'
+                }
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                dir('TutorialsNinja') {
+                    bat 'mvn compile'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('TutorialsNinja') {
+                    bat 'mvn test'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                dir('TutorialsNinja') {
+                    bat 'mvn package'
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                dir('TutorialsNinja') {
+                    bat 'docker build -t tutorials-ninja .'
+                }
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                dir('TutorialsNinja') {
+                    bat 'docker run --rm tutorials-ninja'
+                }
+            }
+        }
+    }
+
+    post {
+
+        always {
+
+            junit allowEmptyResults: true,
+                  testResults: 'TutorialsNinja/target/junitreport/*.xml'
+
+            archiveArtifacts artifacts: 'TutorialsNinja/target/**/*.*',
+                             fingerprint: true
+        }
+
+        success {
+            echo 'Build Successful'
+        }
+
+        failure {
+            echo 'Build Failed'
+        }
+    }
+}
