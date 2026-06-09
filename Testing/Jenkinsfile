@@ -15,43 +15,38 @@ pipeline {
             }
         }
 
-        stage('Clean') {
+        stage('Build & Test') {
             steps {
                 dir('Testing') {
-                    bat 'mvn clean'
+                    bat 'mvn clean test'
                 }
             }
         }
 
-        stage('Compile') {
+        stage('Docker Build') {
             steps {
                 dir('Testing') {
-                    bat 'mvn compile'
+                    bat 'docker build -t testing .'
                 }
             }
         }
 
-        stage('Test') {
+        stage('Docker Run') {
             steps {
                 dir('Testing') {
-                    bat 'mvn test'
-                }
-            }
-        }
-
-        stage('Package') {
-            steps {
-                dir('Testing') {
-                    bat 'mvn package'
+                    bat 'docker run --rm testing'
                 }
             }
         }
     }
 
     post {
-
         always {
-            echo 'Pipeline execution completed'
+            junit allowEmptyResults: true,
+                  testResults: 'Testing/target/surefire-reports/*.xml'
+
+            archiveArtifacts artifacts: 'Testing/target/**/*.*',
+                             fingerprint: true
         }
 
         success {
