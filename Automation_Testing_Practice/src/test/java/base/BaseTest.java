@@ -12,6 +12,10 @@ import utils.DriverFactory;
 public class BaseTest {
 
     protected WebDriver driver;
+    
+    public WebDriver getDriver() {
+    	return driver;
+    }
     protected WebDriverWait wait;
 
     @BeforeClass
