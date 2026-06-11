@@ -6,11 +6,6 @@ pipeline {
         jdk 'jdk21'
     }
 
-    environment {
-        EXCEL_PATH = "/data/excel/testdata.xlsx"
-        FILE_PATH  = "/data/files/ABC.txt"
-    }
-
     stages {
 
         stage('Checkout') {
@@ -20,10 +15,26 @@ pipeline {
             }
         }
 
-        stage('Build & Test') {
+        stage('Build') {
             steps {
                 dir('Automation_Testing_Practice') {
-                    bat 'mvn clean test'
+                    bat 'mvn clean'
+                }
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                dir('Automation_Testing_Practice') {
+                    bat 'mvn compile'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('Automation_Testing_Practice') {
+                    bat 'mvn test'
                 }
             }
         }
@@ -31,45 +42,16 @@ pipeline {
         stage('Package') {
             steps {
                 dir('Automation_Testing_Practice') {
-                    bat 'mvn package -DskipTests'
+                    bat 'mvn package'
                 }
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                dir('Automation_Testing_Practice') {
-                    bat 'docker build -t automation-testing-practice .'
-                }
-            }
-        }
 
-        stage('Docker Run') {
-            steps {
-                bat '''
-                docker run --rm ^
-                -e EXCEL_PATH=/data/excel/testdata.xlsx ^
-                -e FILE_PATH=/data/files/ABC.txt ^
-                -v D:\\ExcelTest:/data/excel ^
-                -v E:\\Text:/data/files ^
-                automation-testing-practice
-                '''
-            }
-        }
     }
 
     post {
 
-        always {
-
-
-            archiveArtifacts artifacts: 'Automation_Testing_Practice/test-output/**/*.*',
-                             allowEmptyArchive: true
-
-            archiveArtifacts artifacts: 'Automation_Testing_Practice/target/**/*.*',
-                             allowEmptyArchive: true,
-                             fingerprint: true
-        }
 
         success {
             echo 'Build Successful'
