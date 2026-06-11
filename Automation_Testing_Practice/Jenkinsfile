@@ -6,6 +6,11 @@ pipeline {
         jdk 'jdk21'
     }
 
+    environment {
+        EXCEL_PATH = "/data/excel/testdata.xlsx"
+        FILE_PATH  = "/data/files/ABC.txt"
+    }
+
     stages {
 
         stage('Checkout') {
@@ -26,7 +31,7 @@ pipeline {
         stage('Package') {
             steps {
                 dir('Automation_Testing_Practice') {
-                    bat 'mvn package'
+                    bat 'mvn package -DskipTests'
                 }
             }
         }
@@ -34,16 +39,21 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir('Automation_Testing_Practice') {
-                    bat 'docker build -t automation_testing_practice .'
+                    bat 'docker build -t automation-testing-practice .'
                 }
             }
         }
 
         stage('Docker Run') {
             steps {
-                dir('Automation_Testing_Practice') {
-                    bat 'docker run --rm automation_testing_practice'
-                }
+                bat '''
+                docker run --rm ^
+                -e EXCEL_PATH=/data/excel/testdata.xlsx ^
+                -e FILE_PATH=/data/files/ABC.txt ^
+                -v D:\\ExcelTest:/data/excel ^
+                -v E:\\Text:/data/files ^
+                automation-testing-practice
+                '''
             }
         }
     }
@@ -52,12 +62,13 @@ pipeline {
 
         always {
 
-            archiveArtifacts artifacts: 'Automation_Testing_Practice/target/**/*.*',
-                             allowEmptyArchive: true,
-                             fingerprint: true
 
             archiveArtifacts artifacts: 'Automation_Testing_Practice/test-output/**/*.*',
                              allowEmptyArchive: true
+
+            archiveArtifacts artifacts: 'Automation_Testing_Practice/target/**/*.*',
+                             allowEmptyArchive: true,
+                             fingerprint: true
         }
 
         success {
