@@ -34,7 +34,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir('Automation_Testing_Practice') {
-                    bat 'docker build -t Automation_Testing_Practice .'
+                    bat 'docker build -t automation_testing_practice .'
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
         stage('Docker Run') {
             steps {
                 dir('Automation_Testing_Practice') {
-                    bat 'docker run --rm Automation_Testing_Practice'
+                    bat 'docker run --rm automation_testing_practice'
                 }
             }
         }
