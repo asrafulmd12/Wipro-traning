@@ -15,26 +15,10 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build & Test') {
             steps {
                 dir('Automation_Testing_Practice') {
-                    bat 'mvn clean'
-                }
-            }
-        }
-
-        stage('Compile') {
-            steps {
-                dir('Automation_Testing_Practice') {
-                    bat 'mvn compile'
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                dir('Automation_Testing_Practice') {
-                    bat 'mvn test'
+                    bat 'mvn clean test'
                 }
             }
         }
@@ -47,11 +31,37 @@ pipeline {
             }
         }
 
+        stage('Docker Build') {
+            steps {
+                dir('Automation_Testing_Practice') {
+                    bat 'docker build -t Automation_Testing_Practice .'
+                }
+            }
+        }
 
+        stage('Docker Run') {
+            steps {
+                dir('Automation_Testing_Practice') {
+                    bat 'docker run --rm Automation_Testing_Practice'
+                }
+            }
+        }
     }
 
     post {
 
+        always {
+
+            junit allowEmptyResults: true,
+                  testResults: 'Automation_Testing_Practice/target/surefire-reports/*.xml'
+
+            archiveArtifacts artifacts: 'Automation_Testing_Practice/target/**/*.*',
+                             allowEmptyArchive: true,
+                             fingerprint: true
+
+            archiveArtifacts artifacts: 'Automation_Testing_Practice/test-output/**/*.*',
+                             allowEmptyArchive: true
+        }
 
         success {
             echo 'Build Successful'
