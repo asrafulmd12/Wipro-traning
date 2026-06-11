@@ -10,8 +10,8 @@
         <methods>
           <include name="setup"/>
           <include name="tearDown"/>
+          <include name="wikipediaTest"/>
           <include name="setupPage"/>
-          <include name="actionsLaptopBrokenLinksAndShadowDomTest"/>
         </methods>
       </class> <!-- tests.BlogSpotTest -->
     </classes>
